@@ -7,7 +7,7 @@ import Image from "next/image";
 interface ModalProps {
   show: boolean;
   onClose: () => void;
-  project: Project;
+  project: Project | null;
 }
 export const Modal = ({ show, onClose, project }: ModalProps) => {
   const animation = useSpring({
@@ -28,7 +28,7 @@ export const Modal = ({ show, onClose, project }: ModalProps) => {
   }, [show]);
 
   // if no project selected, return null
-  if (!show && !project) {
+  if (!show || !project) {
     return null;
   }
 
