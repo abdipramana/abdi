@@ -1,95 +1,81 @@
-import Image from "next/image";
+"use client";
+
+import { PROJECTS, SOCIAL } from "@/constants/data";
 import styles from "./page.module.css";
+import Image from "next/image";
+import { useState } from "react";
+import { Project } from "@/types/project";
+import { Modal } from "@/components/modal";
 
 export default function Home() {
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  // show project modal
+  const onShowProject = (project: Project) => {
+    setSelectedProject(project);
+    setShowModal(true);
+  };
+
+  // close project modal
+  const onCloseModal = () => {
+    setShowModal(false);
+    setSelectedProject(null);
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
+    <>
+      <main className={styles.main}>
+        <section className={styles.content}>
+          <h1>I Gede Abdi Pramana</h1>
+          <h4>Frontend Engineer</h4>
           <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
+            A passionate software engineer specializing in frontend development,
+            dedicated to craft engaging and user-friendly interfaces. Proficient
+            in JavaScript and experienced with React, always open to exploring
+            new ideas, technologies and work collaboratively.
           </p>
-        </a>
-      </div>
-    </main>
+          <nav className={styles.nav}>
+            {SOCIAL.map(({ label, icon: Icon, href, color }) => (
+              <a
+                key={label}
+                href={href}
+                className={styles.item}
+                title={label}
+                target="_blank"
+                style={{ backgroundColor: color }}
+              >
+                <Icon className={styles.icon} />
+              </a>
+            ))}
+          </nav>
+        </section>
+        <section className={styles.portfolio}>
+          {PROJECTS.map((project: Project) => (
+            <div
+              key={project.title}
+              className={styles.portfolioItem}
+              onClick={() => onShowProject(project)}
+            >
+              <figure>
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  width={300}
+                  height={200}
+                  layout="responsive"
+                />
+                <p>{project.title}</p>
+              </figure>
+            </div>
+          ))}
+        </section>
+        <Modal
+          show={showModal}
+          onClose={onCloseModal}
+          project={selectedProject}
+        />
+      </main>
+    </>
   );
 }
